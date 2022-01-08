@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.15.3)
 # turn on compile commands so VS Code can use the include paths
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-
 # Path to toolchain file. This one has to be before 'project()' below
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
