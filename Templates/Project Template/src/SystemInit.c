@@ -1,13 +1,35 @@
+/**
+ * @file SystemInit.c
+ * @author Jeff Hatton
+ * @brief Implementation for SystemInit
+ * @date 2022-01-21
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
+#include "SystemInit.h"
 
 #include "main.h"
 
 #include "stm32wbxx_hal_uart.h"
 #include "stm32wbxx_hal_uart_ex.h"
 
-void Error_Handler(void);
+// Private Types ****************************************
 
-UART_HandleTypeDef huart1;
-uint8_t aTxBuffer[] = "Hello World\n";
+// Constants ********************************************
+
+// Macros ***********************************************
+
+// Functions Prototypes *********************************
+
+// Public Variables ************************************
+
+UART_HandleTypeDef gUart1;
+
+// Private Variables ************************************
+
+// Private Functions *************************************
 
 /**
   * @brief USART1 Initialization Function
@@ -16,30 +38,30 @@ uint8_t aTxBuffer[] = "Hello World\n";
   */
 static void MX_USART1_UART_Init(void)
 {
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  gUart1.Instance = USART1;
+  gUart1.Init.BaudRate = 9600;
+  gUart1.Init.WordLength = UART_WORDLENGTH_8B;
+  gUart1.Init.StopBits = UART_STOPBITS_1;
+  gUart1.Init.Parity = UART_PARITY_NONE;
+  gUart1.Init.Mode = UART_MODE_TX_RX;
+  gUart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  gUart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  gUart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  gUart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  gUart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&gUart1) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  if (HAL_UARTEx_SetTxFifoThreshold(&gUart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  if (HAL_UARTEx_SetRxFifoThreshold(&gUart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK)
+  if (HAL_UARTEx_DisableFifoMode(&gUart1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -89,20 +111,11 @@ void SystemClock_Config(void)
   }
 }
 
-int main(void) {
+// Public Functions *************************************
+
+void SystemInit_Init(void)
+{
     HAL_Init();
     SystemClock_Config();
     MX_USART1_UART_Init();
-
-    if(HAL_UART_Transmit(&huart1, (uint8_t*)aTxBuffer, sizeof(aTxBuffer), 5000)!= HAL_OK)
-    {
-        Error_Handler(); 
-    }
-
-    return 0;
-}
-
-void Error_Handler(void)
-{
-  while(1);
 }
